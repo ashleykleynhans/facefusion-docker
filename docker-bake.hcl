@@ -14,13 +14,17 @@ variable "RELEASE" {
     default = "3.5.0"
 }
 
+variable "RELEASE_SUFFIX" {
+    default = ".post1"
+}
+
 variable "CU_VERSION" {
     default = "124"
 }
 
 target "default" {
     dockerfile = "Dockerfile"
-    tags = ["${REGISTRY}/${REGISTRY_USER}/${APP}:${RELEASE}"]
+    tags = ["${REGISTRY}/${REGISTRY_USER}/${APP}:${RELEASE}${RELEASE_SUFFIX}"]
     args = {
         RELEASE = "${RELEASE}"
         PYTHON_VERSION = "3.12"
