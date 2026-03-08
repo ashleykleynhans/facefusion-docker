@@ -11,11 +11,11 @@ variable "APP" {
 }
 
 variable "RELEASE" {
-    default = "3.5.3"
+    default = "3.5.4"
 }
 
 variable "RELEASE_SUFFIX" {
-    default = ".post1"
+    default = ""
 }
 
 variable "CU_VERSION" {
@@ -33,6 +33,6 @@ target "default" {
         XFORMERS_VERSION = "0.0.29.post3+cu${CU_VERSION}"
         FACEFUSION_VERSION = "${RELEASE}"
         FACEFUSION_CUDA_VERSION = "12.4"
-        RUNPODCTL_VERSION = "v1.14.15"
+        RUNPODCTL_VERSION = "v2.1.6"
     }
 }
