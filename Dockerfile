@@ -8,15 +8,19 @@ ENV DEBIAN_FRONTEND=noninteractive \
     SHELL=/bin/bash
 
 # Install Ubuntu packages
+ARG PYTHON_VERSION
 RUN apt update && \
     apt -y upgrade && \
     apt install -y --no-install-recommends \
-        software-properties-common \
+        software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt update && \
+    apt install -y --no-install-recommends \
         build-essential \
-        python3.10-venv \
-        python3-pip \
-        python3-tk \
-        python3-dev \
+        python${PYTHON_VERSION} \
+        python${PYTHON_VERSION}-venv \
+        python${PYTHON_VERSION}-dev \
+        python${PYTHON_VERSION}-tk \
         nginx \
         bash \
         dos2unix \
@@ -56,7 +60,13 @@ RUN apt update && \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 
 # Set Python
-RUN ln -s /usr/bin/python3.10 /usr/bin/python
+RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
+
+# Install pip
+RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} && \
+    python3 -m pip install --upgrade --no-cache-dir pip && \
+    rm -f /usr/bin/pip3 && \
+    ln -s /usr/local/bin/pip3 /usr/bin/pip3
 
 # Stage 2: Install FaceFusion and python modules
 FROM base as setup
