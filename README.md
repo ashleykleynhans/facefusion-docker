@@ -11,7 +11,7 @@
 
 * Ubuntu 22.04 LTS
 * CUDA 12.4
-* Python 3.12
+* Python 3.12.13
 * [FaceFusion](
   https://github.com/facefusion/facefusion) 3.6.0
 * Torch 2.6.0
