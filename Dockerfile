@@ -64,12 +64,12 @@ RUN ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python
 
 # Install pip
 RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} && \
-    python3 -m pip install --upgrade --no-cache-dir pip && \
+    python${PYTHON_VERSION} -m pip install --upgrade --no-cache-dir pip && \
     rm -f /usr/bin/pip3 && \
     ln -s /usr/local/bin/pip3 /usr/bin/pip3
 
 # Stage 2: Install FaceFusion and python modules
-FROM base as setup
+FROM base AS setup
 
 # Install FaceFusion
 WORKDIR /
