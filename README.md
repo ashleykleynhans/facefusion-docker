@@ -13,7 +13,7 @@
 * CUDA 12.4
 * Python 3.12.13
 * [FaceFusion](
-  https://github.com/facefusion/facefusion) 3.6.1
+  https://github.com/facefusion/facefusion) 3.7.0
 * Torch 2.6.0
 * [Jupyter Lab](https://github.com/jupyterlab/jupyterlab)
 * [code-server](https://github.com/coder/code-server)
