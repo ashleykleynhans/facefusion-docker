@@ -97,6 +97,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
+      attestations: write
     outputs:
       images: ${{ steps.list-images.outputs.images }}
       images_json: ${{ steps.list-images.outputs.images_json }}
@@ -134,6 +136,10 @@ jobs:
           target "default" {
             inherits = ["default"]
             tags = ["ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}${{ needs.detect-changes.outputs.release_suffix }}"]
+            attest = [
+              "type=provenance,mode=max",
+              "type=sbom"
+            ]
           }
           EOF
 
@@ -164,8 +170,10 @@ jobs:
           # Wait for registry to update
           sleep 10
 
-          # Try to pull the image
-          docker pull $IMAGE && echo "✅ SUCCESS: Image verified: $IMAGE" || echo "❌ FAILED: Could not pull image: $IMAGE"
+          # Inspect the manifest to confirm the image exists in the registry,
+          # without pulling the full image
+          docker buildx imagetools inspect $IMAGE || { echo "❌ FAILED: Could not verify image: $IMAGE"; exit 1; }
+          echo "✅ SUCCESS: Image verified: $IMAGE"
 
       - name: List built image
         id: list-images
