@@ -131,15 +131,10 @@ jobs:
 
       - name: Create temporary docker-bake override file
         run: |
-          # Create an override file that forces ghcr.io
           cat > docker-bake.override.hcl << 'EOF'
           target "default" {
             inherits = ["default"]
             tags = ["ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}${{ needs.detect-changes.outputs.release_suffix }}"]
-            attest = [
-              "type=provenance,mode=max",
-              "type=sbom"
-            ]
           }
           EOF
 
@@ -147,20 +142,29 @@ jobs:
           cat docker-bake.override.hcl
 
       - name: Build and push Docker image
-        run: |
-          echo "Building and pushing Docker image to ghcr.io..."
+        uses: docker/bake-action@v6
+        with:
+          files: |
+            docker-bake.hcl
+            docker-bake.override.hcl
+          targets: default
+          push: true
+          provenance: mode=max
+          sbom: true
 
-          # Show what will be built
-          echo "Configuration:"
-          docker buildx bake -f docker-bake.hcl -f docker-bake.override.hcl --print default
+      - name: Generate SBOM artifact
+        uses: anchore/sbom-action@v0
+        with:
+          image: ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}${{ needs.detect-changes.outputs.release_suffix }}
+          format: spdx-json
+          output-file: sbom.spdx.json
 
-          echo ""
-          echo "Starting build..."
-
-          # Build with both files - override will take precedence for tags
-          docker buildx bake -f docker-bake.hcl -f docker-bake.override.hcl --push default
-
-          echo "Build completed!"
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.spdx.json
+          retention-days: 90
 
       - name: Verify image was pushed
         run: |
