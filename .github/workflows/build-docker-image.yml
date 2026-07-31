@@ -135,6 +135,10 @@ jobs:
           target "default" {
             inherits = ["default"]
             tags = ["ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}${{ needs.detect-changes.outputs.release_suffix }}"]
+            attest = [
+              "type=provenance,mode=max",
+              "type=sbom"
+            ]
           }
           EOF
 
@@ -142,15 +146,8 @@ jobs:
           cat docker-bake.override.hcl
 
       - name: Build and push Docker image
-        uses: docker/bake-action@v6
-        with:
-          files: |
-            docker-bake.hcl
-            docker-bake.override.hcl
-          targets: default
-          push: true
-          provenance: mode=max
-          sbom: true
+        run: |
+          docker buildx bake -f docker-bake.hcl -f docker-bake.override.hcl --push default
 
       - name: Generate SBOM artifact
         uses: anchore/sbom-action@v0
