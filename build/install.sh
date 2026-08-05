@@ -51,5 +51,5 @@ micromamba activate facefusion
 ${TORCH_COMMAND}
 
 # Install the dependencies for FaceFusion
-python3 install.py cuda
+python3 install.py cuda@12
 micromamba deactivate
