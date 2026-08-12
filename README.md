@@ -71,6 +71,7 @@ docker run -d \
   -p 7777:7777 \
   -p 8888:8888 \
   -p 2999:2999 \
+  -p 8080:8080 \
   -e JUPYTER_LAB_PASSWORD="password" \
   ashleykza/facefusion:latest
 ```
@@ -84,7 +85,7 @@ You can obviously substitute the image name and tag with your own.
 | 3000         | 3001          | FaceFusion           |
 | 7777         | 7777          | Code Server          |
 | 8888         | 8888          | Jupyter Lab          |
-| 2999         | 2999          | Runpod File Uploader |
+| 8080         | 8080          | RunPod File Uploader |
 
 ### Environment Variables
 
