@@ -11,7 +11,7 @@ variable "APP" {
 }
 
 variable "RELEASE" {
-    default = "3.8.3"
+    default = "3.9.0"
 }
 
 variable "RELEASE_SUFFIX" {
