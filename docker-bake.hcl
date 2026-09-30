@@ -15,7 +15,7 @@ variable "RELEASE" {
 }
 
 variable "RELEASE_SUFFIX" {
-    default = ""
+    default = ".post1"
 }
 
 variable "CU_VERSION" {
