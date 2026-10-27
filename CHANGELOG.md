@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project tracks the [FaceFusion](https://github.com/facefusion/facefusion)
 release it packages.
 
+## [3.9.2] - 2026-10-27
+
+### Changed
+
+- Bump FaceFusion to 3.9.2
+
 ## [3.9.1] - 2026-09-30
 
 ### Changed
