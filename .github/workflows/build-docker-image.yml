@@ -149,8 +149,20 @@ jobs:
         run: |
           docker buildx bake -f docker-bake.hcl -f docker-bake.override.hcl --push default
 
+      - name: Free build cache before SBOM scan
+        run: |
+          # The image is already pushed, so the build cache is no longer needed.
+          # Dropping it keeps enough space on the root filesystem for the SBOM scan.
+          docker buildx prune -af
+          df -h / /tmp
+
       - name: Generate SBOM artifact
         uses: anchore/sbom-action@v0
+        env:
+          # Syft/stereoscope stage image layers in $TMPDIR. On GitHub runners
+          # /tmp is a small (8 GB) tmpfs, which overflows when scanning this
+          # CUDA image (~10 GB compressed), so use the root filesystem instead.
+          TMPDIR: /var/tmp
         with:
           image: ghcr.io/${{ github.repository_owner }}/${{ needs.detect-changes.outputs.app }}:${{ needs.detect-changes.outputs.release }}${{ needs.detect-changes.outputs.release_suffix }}
           format: spdx-json
